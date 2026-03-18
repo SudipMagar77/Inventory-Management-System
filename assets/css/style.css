@@ -418,3 +418,37 @@ button:hover {
         grid-template-columns: 1fr;
     }
 }
+/* Error and success message styling */
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.alert-error {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+}
+
+.alert-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.error-message {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+/* Input error styling */
+input.error {
+    border-color: #f44336 !important;
+}
+
+input.valid {
+    border-color: #4CAF50 !important;
+}

@@ -215,13 +215,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" name="username" placeholder="Choose a username" required>
-                <small class="password-hint">Username cannot be only numbers</small>
+
             </div>
 
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" name="password" placeholder="Enter password" required>
-                <small class="password-hint">Password must have at least 5 words</small>
+
             </div>
 
             <div class="form-group">

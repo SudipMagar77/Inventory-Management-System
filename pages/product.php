@@ -9,6 +9,11 @@ if (isset($_POST['add_product'])) {
     $purchase_price = mysqli_real_escape_string($conn, $_POST['purchase_price']);
     $sale_price = mysqli_real_escape_string($conn, $_POST['sale_price']);
 
+    if ($purchase_price < 1 || $sale_price < 1) {
+        $_SESSION['error'] = "Price must be greater than or equal to 1.";
+        header("Location: product.php");
+        exit();
+    }
     // Handle image upload
     $product_image = 'default-product.jpg';
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] == 0) {
@@ -44,6 +49,12 @@ if (isset($_POST['update_product'])) {
     $category_id = mysqli_real_escape_string($conn, $_POST['category_id']);
     $purchase_price = mysqli_real_escape_string($conn, $_POST['purchase_price']);
     $sale_price = mysqli_real_escape_string($conn, $_POST['sale_price']);
+
+    if ($purchase_price < 1 || $sale_price < 1) {
+        $_SESSION['error'] = "Price must be greater than or equal to 1.";
+        header("Location: product.php");
+        exit();
+    }
 
     $query = "UPDATE products SET 
               name='$name', 
@@ -347,12 +358,12 @@ if (isset($_GET['edit'])) {
 
                 <div class="form-group">
                     <label>Purchase Price (Rs.):</label>
-                    <input type="number" step="0.01" name="purchase_price" required>
+                    <input type="number" min="1" step="1" name="purchase_price" oninput="this.value = Math.abs(this.value)" onkeydown="return event.key !== '-'" required>
                 </div>
 
                 <div class="form-group">
                     <label>Sale Price (Rs.):</label>
-                    <input type="number" step="0.01" name="sale_price" required>
+                    <input type="number" min="1" step="1" name="sale_price" oninput="this.value = Math.abs(this.value)" onkeydown="return event.key !== '-'" required>
                 </div>
 
                 <div class="form-group">
@@ -438,12 +449,12 @@ if (isset($_GET['edit'])) {
 
                     <div class="form-group">
                         <label>Purchase Price (Rs.):</label>
-                        <input type="number" step="0.01" name="purchase_price" value="<?php echo $edit_product['purchase_price']; ?>" required>
+                        <input type="number" min="1" step="1" name="purchase_price" oninput="this.value = Math.abs(this.value)" onkeydown="return event.key !== '-'" value="<?php echo $edit_product['purchase_price']; ?>" required>
                     </div>
 
                     <div class="form-group">
                         <label>Sale Price (Rs.):</label>
-                        <input type="number" step="0.01" name="sale_price" value="<?php echo $edit_product['sale_price']; ?>" required>
+                        <input type="number" min="1" step="1" name="sale_price" oninput="this.value = Math.abs(this.value)" onkeydown="return event.key !== '-'" value="<?php echo $edit_product['sale_price']; ?>" required>
                     </div>
                 </div>
                 <div class="modal-footer">

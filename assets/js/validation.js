@@ -107,41 +107,93 @@ function validatePrice(input) {
   }
 }
 
-// Add real-time validation for forms
-document.addEventListener("DOMContentLoaded", function () {
-  // Login form validation
-  const loginForm = document.getElementById("loginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", function (e) {
-      const username = document.getElementById("username");
-      const password = document.getElementById("password");
+// ========== ADD THE NEW CATEGORY VALIDATION CODE HERE ==========
 
-      if (!validateUsername(username) || !validatePassword(password)) {
-        e.preventDefault();
-      }
-    });
+// Validate category form before submission
+function validateCategoryForm() {
+  const nameInput = document.getElementById("categoryName");
+  const errorElement = document.getElementById("categoryError");
+
+  // Check if element exists
+  if (!nameInput || !errorElement) {
+    return true; // If elements don't exist, don't block submission
   }
 
-  // Signup form validation
-  const signupForm = document.getElementById("signupForm");
-  if (signupForm) {
-    signupForm.addEventListener("submit", function (e) {
-      const username = document.getElementById("username");
-      const password = document.getElementById("password");
-      const confirmPassword = document.getElementById("confirm_password");
+  const value = nameInput.value.trim();
 
-      if (
-        !validateUsername(username) ||
-        !validatePassword(password) ||
-        !validateConfirmPassword(confirmPassword)
-      ) {
-        e.preventDefault();
+  // Check if empty
+  if (value === "") {
+    errorElement.textContent = "❌ Category name cannot be empty";
+    errorElement.style.color = "#f44336";
+    nameInput.style.borderColor = "#f44336";
+    return false;
+  }
+
+  // Check if just quotes
+  if (value === '""' || value === "''") {
+    errorElement.textContent = "❌ Please enter a valid category name";
+    errorElement.style.color = "#f44336";
+    nameInput.style.borderColor = "#f44336";
+    return false;
+  }
+
+  // Check minimum length
+  if (value.length < 2) {
+    errorElement.textContent = "❌ Category name must be at least 2 characters";
+    errorElement.style.color = "#f44336";
+    nameInput.style.borderColor = "#f44336";
+    return false;
+  }
+
+  // Check if only numbers
+  if (/^\d+$/.test(value)) {
+    errorElement.textContent = "❌ Category name cannot be only numbers";
+    errorElement.style.color = "#f44336";
+    nameInput.style.borderColor = "#f44336";
+    return false;
+  }
+
+  return true;
+}
+
+// Real-time validation as user types
+document.addEventListener("DOMContentLoaded", function () {
+  const categoryInput = document.getElementById("categoryName");
+  const errorElement = document.getElementById("categoryError");
+
+  if (categoryInput && errorElement) {
+    categoryInput.addEventListener("keyup", function () {
+      const value = this.value.trim();
+
+      if (value === "") {
+        errorElement.textContent = "❌ Category name cannot be empty";
+        errorElement.style.color = "#f44336";
+        this.style.borderColor = "#f44336";
+      } else if (value === '""' || value === "''") {
+        errorElement.textContent = "❌ Please enter a valid category name";
+        errorElement.style.color = "#f44336";
+        this.style.borderColor = "#f44336";
+      } else if (value.length < 2) {
+        errorElement.textContent =
+          "❌ Category name must be at least 2 characters";
+        errorElement.style.color = "#f44336";
+        this.style.borderColor = "#f44336";
+      } else if (/^\d+$/.test(value)) {
+        errorElement.textContent = "❌ Category name cannot be only numbers";
+        errorElement.style.color = "#f44336";
+        this.style.borderColor = "#f44336";
+      } else {
+        errorElement.textContent = "✅ Valid category name";
+        errorElement.style.color = "#4CAF50";
+        this.style.borderColor = "#4CAF50";
       }
     });
   }
 });
 
-// Modal functions
+// ========== END OF NEW CODE ==========
+
+// Modal functions (if they exist in this file)
 function openModal(id) {
   document.getElementById(id).style.display = "block";
 }
@@ -166,3 +218,141 @@ function removeImage() {
     "../assets/images/default-product.jpg";
   document.querySelector('input[name="product_image"]').value = "";
 }
+// Validate category name in real-time
+function validateCategoryName(input) {
+  const value = input.value.trim();
+  const errorElement = document.getElementById("categoryError");
+  const saveBtn = document.getElementById("saveCategoryBtn");
+
+  if (value === "") {
+    errorElement.textContent = "❌ Category name cannot be empty";
+    if (saveBtn) saveBtn.disabled = true;
+    return false;
+  } else if (value === '""' || value === "''") {
+    errorElement.textContent = "❌ Please enter a valid category name";
+    if (saveBtn) saveBtn.disabled = true;
+    return false;
+  } else if (value.length < 2) {
+    errorElement.textContent = "❌ Category name must be at least 2 characters";
+    if (saveBtn) saveBtn.disabled = true;
+    return false;
+  } else if (/^\d+$/.test(value)) {
+    errorElement.textContent = "❌ Category name cannot be only numbers";
+    if (saveBtn) saveBtn.disabled = true;
+    return false;
+  } else {
+    errorElement.textContent = "✅ Valid category name";
+    errorElement.style.color = "#4CAF50";
+    if (saveBtn) saveBtn.disabled = false;
+    return true;
+  }
+}
+
+// Validate edit category name
+function validateEditCategoryName(input) {
+  const value = input.value.trim();
+  const errorElement = document.getElementById("editCategoryError");
+
+  if (value === "") {
+    errorElement.textContent = "❌ Category name cannot be empty";
+    return false;
+  } else if (value === '""' || value === "''") {
+    errorElement.textContent = "❌ Please enter a valid category name";
+    return false;
+  } else if (value.length < 2) {
+    errorElement.textContent = "❌ Category name must be at least 2 characters";
+    return false;
+  } else if (/^\d+$/.test(value)) {
+    errorElement.textContent = "❌ Category name cannot be only numbers";
+    return false;
+  } else {
+    errorElement.textContent = "✅ Valid category name";
+    errorElement.style.color = "#4CAF50";
+    return true;
+  }
+}
+// Validate edit category form before submission
+function validateEditCategoryForm() {
+    const nameInput = document.getElementById('editCategoryName');
+    const errorElement = document.getElementById('editCategoryError');
+    
+    // Check if elements exist
+    if(!nameInput || !errorElement) {
+        return true;
+    }
+    
+    const value = nameInput.value.trim();
+    
+    // Check if empty
+    if(value === '') {
+        errorElement.textContent = '❌ Category name cannot be empty';
+        errorElement.style.color = '#f44336';
+        nameInput.style.borderColor = '#f44336';
+        return false;
+    }
+    
+    // Check if just quotes
+    if(value === '""' || value === "''") {
+        errorElement.textContent = '❌ Please enter a valid category name';
+        errorElement.style.color = '#f44336';
+        nameInput.style.borderColor = '#f44336';
+        return false;
+    }
+    
+    // Check minimum length
+    if(value.length < 2) {
+        errorElement.textContent = '❌ Category name must be at least 2 characters';
+        errorElement.style.color = '#f44336';
+        nameInput.style.borderColor = '#f44336';
+        return false;
+    }
+    
+    // Check if only numbers
+    if(/^\d+$/.test(value)) {
+        errorElement.textContent = '❌ Category name cannot be only numbers';
+        errorElement.style.color = '#f44336';
+        nameInput.style.borderColor = '#f44336';
+        return false;
+    }
+    
+    return true;
+}
+
+// Real-time validation for edit category
+document.addEventListener('DOMContentLoaded', function() {
+    // Add this inside your existing DOMContentLoaded
+    const editCategoryInput = document.getElementById('editCategoryName');
+    const editErrorElement = document.getElementById('editCategoryError');
+    
+    if(editCategoryInput && editErrorElement) {
+        editCategoryInput.addEventListener('keyup', function() {
+            const value = this.value.trim();
+            
+            if(value === '') {
+                editErrorElement.textContent = '❌ Category name cannot be empty';
+                editErrorElement.style.color = '#f44336';
+                this.style.borderColor = '#f44336';
+            }
+            else if(value === '""' || value === "''") {
+                editErrorElement.textContent = '❌ Please enter a valid category name';
+                editErrorElement.style.color = '#f44336';
+                this.style.borderColor = '#f44336';
+            }
+            else if(value.length < 2) {
+                editErrorElement.textContent = '❌ Category name must be at least 2 characters';
+                editErrorElement.style.color = '#f44336';
+                this.style.borderColor = '#f44336';
+            }
+            else if(/^\d+$/.test(value)) {
+                editErrorElement.textContent = '❌ Category name cannot be only numbers';
+                editErrorElement.style.color = '#f44336';
+                this.style.borderColor = '#f44336';
+            }
+            else {
+                editErrorElement.textContent = '✅ Valid category name';
+                editErrorElement.style.color = '#4CAF50';
+                this.style.borderColor = '#4CAF50';
+            }
+        });
+    }
+});

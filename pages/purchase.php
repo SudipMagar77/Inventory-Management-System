@@ -410,7 +410,7 @@ if (isset($_GET['edit'])) {
     }
 
     .data-table thead {
-        background:black;
+        background: black;
         color: white;
     }
 
@@ -547,8 +547,8 @@ if (isset($_GET['edit'])) {
                                 </option>
                             <?php endwhile; ?>
                         </select>
-                        <input type="number" name="quantities[]" placeholder="Quantity" min="1" required>
-                        <input type="number" name="prices[]" placeholder="Price" step="0.01" min="0" required>
+                        <input type="number" name="quantities[]" placeholder="Quantity" min="1" onkeydown="return event.key !== '-'" required>
+                        <input type="number" name="prices[]" placeholder="Price" step="1" min="0" onkeydown="return event.key !== '-'" required>
                         <button type="button" onclick="removeRow(this)" class="remove-row">Remove</button>
                     </div>
                 </div>
@@ -613,8 +613,8 @@ if (isset($_GET['edit'])) {
                                             </option>
                                         <?php endwhile; ?>
                                     </select>
-                                    <input type="number" name="quantities[]" value="<?php echo $item['quantity']; ?>" placeholder="Quantity" min="1" required>
-                                    <input type="number" name="prices[]" value="<?php echo $item['price']; ?>" placeholder="Price" step="0.01" min="0" required>
+                                    <input type="number" name="quantities[]" value="<?php echo $item['quantity']; ?>" placeholder="Quantity" min="1" onkeydown="return event.key !== '-'" required>
+                                    <input type="number" name="prices[]" value="<?php echo $item['price']; ?>" placeholder="Price" step="1" min="0" onkeydown="return event.key !== '-'" required>
                                     <button type="button" onclick="removeRow(this)" class="remove-row">Remove</button>
                                 </div>
                             <?php endwhile; ?>
@@ -631,8 +631,8 @@ if (isset($_GET['edit'])) {
                                         </option>
                                     <?php endwhile; ?>
                                 </select>
-                                <input type="number" name="quantities[]" placeholder="Quantity" min="1" required>
-                                <input type="number" name="prices[]" placeholder="Price" step="0.01" min="0" required>
+                                <input type="number" name="quantities[]" placeholder="Quantity" min="1" onkeydown="return event.key !== '-'" required>
+                                <input type="number" name="prices[]" placeholder="Price" step="0.01" min="0" onkeydown="return event.key !== '-'" required>
                                 <button type="button" onclick="removeRow(this)" class="remove-row">Remove</button>
                             </div>
                         <?php endif; ?>
@@ -789,8 +789,8 @@ if (isset($_GET['edit'])) {
                 </option>
             <?php endwhile; ?>
         </select>
-        <input type="number" name="quantities[]" placeholder="Quantity" min="1" required>
-        <input type="number" name="prices[]" placeholder="Price" step="0.01" min="0" required>
+        <input type="number" name="quantities[]" placeholder="Quantity" min="1" onkeydown="return event.key !== '-'" required>
+        <input type="number" name="prices[]" placeholder="Price" step="1" min="0" onkeydown="return event.key !== '-'" required>
         <button type="button" onclick="removeRow(this)" class="remove-row">Remove</button>
     `;
         container.appendChild(newRow);
@@ -813,8 +813,8 @@ if (isset($_GET['edit'])) {
                 </option>
             <?php endwhile; ?>
         </select>
-        <input type="number" name="quantities[]" placeholder="Quantity" min="1" required>
-        <input type="number" name="prices[]" placeholder="Price" step="0.01" min="0" required>
+        <input type="number" name="quantities[]" placeholder="Quantity" min="1" onkeydown="return event.key !== '-'" required>
+        <input type="number" name="prices[]" placeholder="Price" step="1" min="0" onkeydown="return event.key !== '-'" required>
         <button type="button" onclick="removeRow(this)" class="remove-row">Remove</button>
     `;
         container.appendChild(newRow);
