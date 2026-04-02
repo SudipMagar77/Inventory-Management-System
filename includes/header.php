@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grocery Management System</title>
+    <title>Grocery Inventory Management System</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/validation.js" defer></script>
     <style>
@@ -113,7 +113,7 @@
     <?php if (isset($_SESSION['admin_id'])): ?>
         <nav class="navbar">
             <div class="nav-container">
-                <div class="nav-brand">Grocery Manager</div>
+                <div class="nav-brand">GIMS</div>
                 <ul class="nav-menu">
                     <li><a href="../pages/dashboard.php">Dashboard</a></li>
                     <li><a href="../pages/category.php">Category</a></li>

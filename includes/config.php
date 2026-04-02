@@ -5,7 +5,7 @@ if (!defined('DB_HOST')) {
     define('DB_HOST', 'localhost');
     define('DB_USER', 'root');
     define('DB_PASS', '');
-    define('DB_NAME', 'testgrocery_db');
+    define('DB_NAME', 'grocery_inventory_management_system');
 }
 
 // Start session only if not already started
@@ -23,3 +23,4 @@ if (!$conn) {
 
 // Set timezone
 date_default_timezone_set('Asia/Kathmandu');
+?>

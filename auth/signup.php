@@ -26,8 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($password)) {
         $errors[] = "Password is required!";
-    } else if (str_word_count($password) < 5) {
-        $errors[] = "Password must have at least 5 words!";
+    } else if (strlen($password) < 5) {
+        $errors[] = "Password must be at least 5 characters long!";
+    } else if (!preg_match("/[A-Z]/", $password)) {
+        $errors[] = "Password must contain at least one uppercase letter!";
+    } else if (!preg_match("/[0-9]/", $password)) {
+        $errors[] = "Password must contain at least one number!";
     }
 
     if ($password != $confirm_password) {
@@ -64,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - Grocery Management System</title>
+    <title>Sign Up - Grocery Inventory Management System</title>
     <style>
         * {
             margin: 0;

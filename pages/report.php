@@ -148,6 +148,66 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
         margin: 20px 0;
     }
 
+    /* Search Container Styles */
+    .search-container {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .search-form {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .search-form input {
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        width: 300px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+    }
+
+    .search-form input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    .btn-search {
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+    .btn-search:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-clear {
+        padding: 10px 20px;
+        background: #e0e0e0;
+        color: #333;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+    .btn-clear:hover {
+        background: #d0d0d0;
+        transform: translateY(-2px);
+    }
+
     .data-table {
         width: 100%;
         border-collapse: collapse;
@@ -160,6 +220,7 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
         text-align: left;
         font-weight: bold;
         color: #333;
+        border-bottom: 2px solid #e0e0e0;
     }
 
     .data-table td {
@@ -225,6 +286,7 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
         border-radius: 3px;
         font-size: 12px;
         font-weight: bold;
+        display: inline-block;
     }
 
     .status-in {
@@ -265,10 +327,31 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
 <div class="report-content">
     <?php if ($report_type == 'product_list'): ?>
         <h2>Product List</h2>
+
+        <!-- Search Form -->
+        <div class="search-container">
+            <form method="GET" action="" class="search-form">
+                <input type="hidden" name="type" value="product_list">
+                <input type="text" name="search" placeholder="Search by product name..."
+                    value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                <button type="submit" class="btn-search">Search</button>
+                <?php if (isset($_GET['search']) && !empty($_GET['search'])): ?>
+                    <a href="?type=product_list" class="btn-clear">Clear</a>
+                <?php endif; ?>
+            </form>
+        </div>
+
         <?php
+        $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+        $where = '';
+        if (!empty($search)) {
+            $where = "WHERE p.name LIKE '%$search%'";
+        }
+
         $query = "SELECT p.*, c.name as category_name 
                   FROM products p 
                   LEFT JOIN categories c ON p.category_id = c.id 
+                  $where
                   ORDER BY p.name";
         $result = mysqli_query($conn, $query);
         ?>
@@ -307,7 +390,7 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" class="no-data">No products found</td>
+                        <td colspan="6" class="no-data">No products found<?php echo !empty($search) ? ' matching "' . htmlspecialchars($search) . '"' : ''; ?></td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -315,8 +398,28 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
 
     <?php elseif ($report_type == 'supplier_list'): ?>
         <h2>Supplier List</h2>
+
+        <!-- Search Form -->
+        <div class="search-container">
+            <form method="GET" action="" class="search-form">
+                <input type="hidden" name="type" value="supplier_list">
+                <input type="text" name="search" placeholder="Search by name, phone or email..."
+                    value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                <button type="submit" class="btn-search">Search</button>
+                <?php if (isset($_GET['search']) && !empty($_GET['search'])): ?>
+                    <a href="?type=supplier_list" class="btn-clear">Clear</a>
+                <?php endif; ?>
+            </form>
+        </div>
+
         <?php
-        $result = mysqli_query($conn, "SELECT * FROM suppliers ORDER BY name");
+        $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+        $where = '';
+        if (!empty($search)) {
+            $where = "WHERE name LIKE '%$search%' OR phone LIKE '%$search%' OR email LIKE '%$search%'";
+        }
+
+        $result = mysqli_query($conn, "SELECT * FROM suppliers $where ORDER BY name");
         ?>
         <table class="data-table">
             <thead>
@@ -341,7 +444,7 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="5" class="no-data">No suppliers found</td>
+                        <td colspan="5" class="no-data">No suppliers found<?php echo !empty($search) ? ' matching "' . htmlspecialchars($search) . '"' : ''; ?></td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -349,8 +452,28 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
 
     <?php elseif ($report_type == 'customer_list'): ?>
         <h2>Customer List</h2>
+
+        <!-- Search Form -->
+        <div class="search-container">
+            <form method="GET" action="" class="search-form">
+                <input type="hidden" name="type" value="customer_list">
+                <input type="text" name="search" placeholder="Search by name, phone or email..."
+                    value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                <button type="submit" class="btn-search">Search</button>
+                <?php if (isset($_GET['search']) && !empty($_GET['search'])): ?>
+                    <a href="?type=customer_list" class="btn-clear">Clear</a>
+                <?php endif; ?>
+            </form>
+        </div>
+
         <?php
-        $result = mysqli_query($conn, "SELECT * FROM customers ORDER BY name");
+        $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+        $where = '';
+        if (!empty($search)) {
+            $where = "WHERE name LIKE '%$search%' OR phone LIKE '%$search%' OR email LIKE '%$search%'";
+        }
+
+        $result = mysqli_query($conn, "SELECT * FROM customers $where ORDER BY name");
         ?>
         <table class="data-table">
             <thead>
@@ -375,7 +498,7 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="5" class="no-data">No customers found</td>
+                        <td colspan="5" class="no-data">No customers found<?php echo !empty($search) ? ' matching "' . htmlspecialchars($search) . '"' : ''; ?></td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -626,11 +749,31 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
     <?php elseif ($report_type == 'stock_balance'): ?>
         <h2>Stock Balance</h2>
 
+        <!-- Search Form -->
+        <div class="search-container">
+            <form method="GET" action="" class="search-form">
+                <input type="hidden" name="type" value="stock_balance">
+                <input type="text" name="search" placeholder="Search by product name..."
+                    value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                <button type="submit" class="btn-search">Search</button>
+                <?php if (isset($_GET['search']) && !empty($_GET['search'])): ?>
+                    <a href="?type=stock_balance" class="btn-clear">Clear</a>
+                <?php endif; ?>
+            </form>
+        </div>
+
         <?php
+        $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+        $where = '';
+        if (!empty($search)) {
+            $where = "WHERE p.name LIKE '%$search%'";
+        }
+
         $query = "SELECT p.name, p.stock_quantity, 
                          p.purchase_price, p.sale_price,
                          (p.stock_quantity * p.purchase_price) as stock_value
                   FROM products p
+                  $where
                   ORDER BY p.name";
         $result = mysqli_query($conn, $query);
 
@@ -654,7 +797,6 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
                         $total_value += $row['stock_value'];
                         $total_products++;
 
-                        // Determine stock status
                         if ($row['stock_quantity'] == 0) {
                             $status = '<span class="status-badge status-out">Out of Stock</span>';
                         } elseif ($row['stock_quantity'] < 10) {
@@ -678,7 +820,7 @@ if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
                     </tr>
                 <?php else: ?>
                     <tr>
-                        <td colspan="5" class="no-data">No products found</td>
+                        <td colspan="5" class="no-data">No products found<?php echo !empty($search) ? ' matching "' . htmlspecialchars($search) . '"' : ''; ?></td>
                     </tr>
                 <?php endif; ?>
             </tbody>

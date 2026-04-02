@@ -8,23 +8,23 @@ if (isset($_POST['add_category'])) {
 
     // VALIDATION 1: Check if empty after trimming
     if (empty($name)) {
-        $_SESSION['error'] = "❌ Category name cannot be empty!";
+        $_SESSION['error'] = " Category name cannot be empty!";
     }
     // VALIDATION 2: Check if it's just quotes
     elseif ($name == '""' || $name == "''") {
-        $_SESSION['error'] = "❌ Please enter a valid category name (quotes not allowed)!";
+        $_SESSION['error'] = " Please enter a valid category name (quotes not allowed)!";
     }
     // VALIDATION 3: Check minimum length
     elseif (strlen($name) < 2) {
-        $_SESSION['error'] = "❌ Category name must be at least 2 characters!";
+        $_SESSION['error'] = " Category name must be at least 2 characters!";
     }
     // VALIDATION 4: Check if it contains only numbers
     elseif (is_numeric($name)) {
-        $_SESSION['error'] = "❌ Category name cannot be only numbers!";
+        $_SESSION['error'] = " Category name cannot be only numbers!";
     }
     // VALIDATION 5: Check for special characters (optional)
     elseif (!preg_match("/^[a-zA-Z0-9\s\-]+$/", $name)) {
-        $_SESSION['error'] = "❌ Category name can only contain letters, numbers, spaces and hyphens!";
+        $_SESSION['error'] = " Category name can only contain letters, numbers, spaces and hyphens!";
     } else {
         // Now escape for database
         $name = mysqli_real_escape_string($conn, $name);
@@ -34,13 +34,13 @@ if (isset($_POST['add_category'])) {
         $check_result = mysqli_query($conn, $check_query);
 
         if (mysqli_num_rows($check_result) > 0) {
-            $_SESSION['error'] = "❌ Category '$name' already exists!";
+            $_SESSION['error'] = " Category '$name' already exists!";
         } else {
             $query = "INSERT INTO categories (name) VALUES ('$name')";
             if (mysqli_query($conn, $query)) {
-                $_SESSION['message'] = "✅ Category added successfully!";
+                $_SESSION['message'] = " Category added successfully!";
             } else {
-                $_SESSION['error'] = "❌ Database error: " . mysqli_error($conn);
+                $_SESSION['error'] = " Database error: " . mysqli_error($conn);
             }
         }
     }
@@ -65,13 +65,13 @@ if (isset($_POST['update_category'])) {
 
     // VALIDATION
     if (empty($name)) {
-        $_SESSION['error'] = "❌ Category name cannot be empty!";
+        $_SESSION['error'] = " Category name cannot be empty!";
     } elseif ($name == '""' || $name == "''") {
-        $_SESSION['error'] = "❌ Please enter a valid category name (quotes not allowed)!";
+        $_SESSION['error'] = " Please enter a valid category name (quotes not allowed)!";
     } elseif (strlen($name) < 2) {
-        $_SESSION['error'] = "❌ Category name must be at least 2 characters!";
+        $_SESSION['error'] = " Category name must be at least 2 characters!";
     } elseif (is_numeric($name)) {
-        $_SESSION['error'] = "❌ Category name cannot be only numbers!";
+        $_SESSION['error'] = " Category name cannot be only numbers!";
     } else {
         $name = mysqli_real_escape_string($conn, $name);
 
@@ -80,13 +80,13 @@ if (isset($_POST['update_category'])) {
         $check_result = mysqli_query($conn, $check_query);
 
         if (mysqli_num_rows($check_result) > 0) {
-            $_SESSION['error'] = "❌ Category '$name' already exists!";
+            $_SESSION['error'] = " Category '$name' already exists!";
         } else {
             $query = "UPDATE categories SET name = '$name' WHERE id = $id";
             if (mysqli_query($conn, $query)) {
-                $_SESSION['message'] = "✅ Category updated successfully!";
+                $_SESSION['message'] = " Category updated successfully!";
             } else {
-                $_SESSION['error'] = "❌ Error updating: " . mysqli_error($conn);
+                $_SESSION['error'] = " Error updating: " . mysqli_error($conn);
             }
         }
     }

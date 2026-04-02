@@ -9,13 +9,30 @@ if (isset($_POST['add_supplier'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $address = mysqli_real_escape_string($conn, $_POST['address']);
 
+    //  Check if phone already exists
+    $phone_check = mysqli_query($conn, "SELECT id FROM suppliers WHERE phone = '$phone'");
+    if (mysqli_num_rows($phone_check) > 0) {
+        $_SESSION['error'] = " Phone number already registered to another supplier!";
+        header("Location: supplier.php");
+        exit();
+    }
+
+    //  Check if email already exists
+    $email_check = mysqli_query($conn, "SELECT id FROM suppliers WHERE email = '$email'");
+    if (mysqli_num_rows($email_check) > 0) {
+        $_SESSION['error'] = " Email address already registered to another supplier!";
+        header("Location: supplier.php");
+        exit();
+    }
+
+    // Only proceed if no duplicates found
     $query = "INSERT INTO suppliers (name, phone, email, address) 
               VALUES ('$name', '$phone', '$email', '$address')";
 
     if (mysqli_query($conn, $query)) {
-        $_SESSION['message'] = "Supplier added successfully!";
+        $_SESSION['message'] = " Supplier added successfully!";
     } else {
-        $_SESSION['error'] = "Error: " . mysqli_error($conn);
+        $_SESSION['error'] = " Error: " . mysqli_error($conn);
     }
     header("Location: supplier.php");
     exit();
@@ -29,17 +46,29 @@ if (isset($_POST['update_supplier'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $address = mysqli_real_escape_string($conn, $_POST['address']);
 
-    $query = "UPDATE suppliers SET 
-              name='$name', 
-              phone='$phone', 
-              email='$email', 
-              address='$address' 
-              WHERE id=$id";
+    //  Check if phone already exists for OTHER suppliers (excluding current)
+    $phone_check = mysqli_query($conn, "SELECT id FROM suppliers WHERE phone = '$phone' AND id != $id");
+    if (mysqli_num_rows($phone_check) > 0) {
+        $_SESSION['error'] = " Phone number already registered to another supplier!";
+        header("Location: supplier.php");
+        exit();
+    }
+
+    //  Check if email already exists for OTHER suppliers (excluding current)
+    $email_check = mysqli_query($conn, "SELECT id FROM suppliers WHERE email = '$email' AND id != $id");
+    if (mysqli_num_rows($email_check) > 0) {
+        $_SESSION['error'] = " Email address already registered to another supplier!";
+        header("Location: supplier.php");
+        exit();
+    }
+
+    // Only proceed if no duplicates found
+    $query = "UPDATE suppliers SET name='$name', phone='$phone', email='$email', address='$address' WHERE id=$id";
 
     if (mysqli_query($conn, $query)) {
-        $_SESSION['message'] = "Supplier updated successfully!";
+        $_SESSION['message'] = " Supplier updated successfully!";
     } else {
-        $_SESSION['error'] = "Error updating: " . mysqli_error($conn);
+        $_SESSION['error'] = " Error updating: " . mysqli_error($conn);
     }
     header("Location: supplier.php");
     exit();

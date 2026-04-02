@@ -9,6 +9,23 @@ if (isset($_POST['add_customer'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $address = mysqli_real_escape_string($conn, $_POST['address']);
 
+    // ✅ ADD THIS - Check if phone already exists
+    $phone_check = mysqli_query($conn, "SELECT id FROM customers WHERE phone = '$phone'");
+    if (mysqli_num_rows($phone_check) > 0) {
+        $_SESSION['error'] = " Phone number already registered!";
+        header("Location: customer.php");
+        exit();
+    }
+
+    // ✅ ADD THIS - Check if email already exists
+    $email_check = mysqli_query($conn, "SELECT id FROM customers WHERE email = '$email'");
+    if (mysqli_num_rows($email_check) > 0) {
+        $_SESSION['error'] = " Email address already registered!";
+        header("Location: customer.php");
+        exit();
+    }
+
+    // Only proceed if no duplicates found
     $query = "INSERT INTO customers (name, phone, email, address) 
               VALUES ('$name', '$phone', '$email', '$address')";
 
@@ -21,6 +38,7 @@ if (isset($_POST['add_customer'])) {
     exit();
 }
 
+
 // Handle Update Customer
 if (isset($_POST['update_customer'])) {
     $id = mysqli_real_escape_string($conn, $_POST['id']);
@@ -29,12 +47,23 @@ if (isset($_POST['update_customer'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $address = mysqli_real_escape_string($conn, $_POST['address']);
 
-    $query = "UPDATE customers SET 
-              name='$name', 
-              phone='$phone', 
-              email='$email', 
-              address='$address' 
-              WHERE id=$id";
+    // ✅ Check if phone already exists for OTHER customers (excluding current)
+    $phone_check = mysqli_query($conn, "SELECT id FROM customers WHERE phone = '$phone' AND id != $id");
+    if (mysqli_num_rows($phone_check) > 0) {
+        $_SESSION['error'] = " Phone number already registered to another customer!";
+        header("Location: customer.php");
+        exit();
+    }
+
+    // ✅ Check if email already exists for OTHER customers (excluding current)
+    $email_check = mysqli_query($conn, "SELECT id FROM customers WHERE email = '$email' AND id != $id");
+    if (mysqli_num_rows($email_check) > 0) {
+        $_SESSION['error'] = " Email address already registered to another customer!";
+        header("Location: customer.php");
+        exit();
+    }
+
+    $query = "UPDATE customers SET name='$name', phone='$phone', email='$email', address='$address' WHERE id=$id";
 
     if (mysqli_query($conn, $query)) {
         $_SESSION['message'] = "Customer updated successfully!";
@@ -44,7 +73,6 @@ if (isset($_POST['update_customer'])) {
     header("Location: customer.php");
     exit();
 }
-
 // Handle Delete Customer
 if (isset($_GET['delete'])) {
     $id = mysqli_real_escape_string($conn, $_GET['delete']);

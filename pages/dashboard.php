@@ -50,8 +50,6 @@ if ($stock_result && mysqli_num_rows($stock_result) > 0) {
     $low_stock = $stock_data['low_stock'] ?? 0;
     $out_of_stock = $stock_data['out_of_stock'] ?? 0;
 }
-
-// NO DEMO DATA - now it will show real data only
 ?>
 <?php include '../includes/header.php'; ?>
 
@@ -69,6 +67,7 @@ if ($stock_result && mysqli_num_rows($stock_result) > 0) {
         border-radius: 10px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         text-align: center;
+        transition: all 0.3s ease;
     }
 
     .card h3 {
@@ -81,6 +80,18 @@ if ($stock_result && mysqli_num_rows($stock_result) > 0) {
         color: #333;
         font-size: 32px;
         font-weight: bold;
+    }
+
+    /* Clickable card links */
+    .card-link {
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+    }
+
+    .card-link:hover .card {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
     }
 
     .chart-container {
@@ -141,22 +152,30 @@ if ($stock_result && mysqli_num_rows($stock_result) > 0) {
 <h1>Dashboard</h1>
 
 <div class="dashboard-cards">
-    <div class="card">
-        <h3>Total Products</h3>
-        <p><?php echo $products_count; ?></p>
-    </div>
-    <div class="card">
-        <h3>Total Categories</h3>
-        <p><?php echo $categories_count; ?></p>
-    </div>
-    <div class="card">
-        <h3>Total Customers</h3>
-        <p><?php echo $customers_count; ?></p>
-    </div>
-    <div class="card">
-        <h3>Total Suppliers</h3>
-        <p><?php echo $suppliers_count; ?></p>
-    </div>
+    <a href="product.php" class="card-link">
+        <div class="card">
+            <h3>Total Products</h3>
+            <p><?php echo $products_count; ?></p>
+        </div>
+    </a>
+    <a href="category.php" class="card-link">
+        <div class="card">
+            <h3>Total Categories</h3>
+            <p><?php echo $categories_count; ?></p>
+        </div>
+    </a>
+    <a href="customer.php" class="card-link">
+        <div class="card">
+            <h3>Total Customers</h3>
+            <p><?php echo $customers_count; ?></p>
+        </div>
+    </a>
+    <a href="supplier.php" class="card-link">
+        <div class="card">
+            <h3>Total Suppliers</h3>
+            <p><?php echo $suppliers_count; ?></p>
+        </div>
+    </a>
 </div>
 
 <div class="chart-container">

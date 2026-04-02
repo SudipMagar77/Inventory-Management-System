@@ -9,8 +9,23 @@ if (isset($_POST['add_product'])) {
     $purchase_price = mysqli_real_escape_string($conn, $_POST['purchase_price']);
     $sale_price = mysqli_real_escape_string($conn, $_POST['sale_price']);
 
+    // Check duplicate product name
+    $check_query = "SELECT * FROM products WHERE name = '$name'";
+    $check_result = mysqli_query($conn, $check_query);
+
+    if (mysqli_num_rows($check_result) > 0) {
+        $_SESSION['error'] = "Product '$name' already exists!";
+        header("Location: product.php");
+        exit();
+    }
+
     if ($purchase_price < 1 || $sale_price < 1) {
         $_SESSION['error'] = "Price must be greater than or equal to 1.";
+        header("Location: product.php");
+        exit();
+    }
+    if ($sale_price <= $purchase_price) {
+        $_SESSION['error'] = "Sale price must be greater than purchase price.";
         header("Location: product.php");
         exit();
     }
@@ -50,8 +65,22 @@ if (isset($_POST['update_product'])) {
     $purchase_price = mysqli_real_escape_string($conn, $_POST['purchase_price']);
     $sale_price = mysqli_real_escape_string($conn, $_POST['sale_price']);
 
+    // Check duplicate product name (excluding current product)
+    $check_query = "SELECT * FROM products WHERE name = '$name' AND id != $id";
+    $check_result = mysqli_query($conn, $check_query);
+
+    if (mysqli_num_rows($check_result) > 0) {
+        $_SESSION['error'] = "Product '$name' already exists!";
+        header("Location: product.php");
+        exit();
+    }
     if ($purchase_price < 1 || $sale_price < 1) {
         $_SESSION['error'] = "Price must be greater than or equal to 1.";
+        header("Location: product.php");
+        exit();
+    }
+    if ($sale_price <= $purchase_price) {
+        $_SESSION['error'] = "Sale price must be greater than purchase price.";
         header("Location: product.php");
         exit();
     }
@@ -519,6 +548,15 @@ if (isset($_GET['edit'])) {
 
 <script>
     // Modal functions
+    function validatePrice() {
+        const purchase = document.querySelector('input[name="purchase_price"]').value;
+        const sale = document.querySelector('input[name="sale_price"]').value;
+
+        if (sale && purchase && parseFloat(sale) <= parseFloat(purchase)) {
+            alert("Sale price must be greater than purchase price!");
+        }
+    }
+
     function openModal(id) {
         document.getElementById(id).style.display = 'block';
     }
